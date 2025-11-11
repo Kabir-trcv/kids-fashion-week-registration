@@ -221,12 +221,16 @@ body {
     background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.15));
     border: 2px solid rgba(255, 215, 0, 0.4);
     border-radius: 20px;
-    padding: 30px;
+    padding: 40px;
     box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+    transition: all 0.4s ease;
+    text-align: center;
 }
 
 .city-section .section-title {
     color: #FF6F00;
+    font-size: 28px;
+    margin-bottom: 30px;
 }
 
 .city-section select {
@@ -239,6 +243,46 @@ body {
 .city-section select:focus {
     border-color: #FF6F00;
     box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.1);
+}
+
+/* Continue Button */
+.continue-btn {
+    margin-top: 30px;
+    padding: 18px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #FF6F00, #FFD700);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(255, 111, 0, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.continue-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 111, 0, 0.4);
+    background: linear-gradient(135deg, #FF8F00, #FFC107);
+}
+
+.continue-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: linear-gradient(135deg, #ccc, #999);
+    box-shadow: none;
+}
+
+.continue-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Main Form Content - Smooth Entrance */
+#mainFormContent {
+    transition: all 0.6s ease;
 }
 
 @keyframes fadeIn {

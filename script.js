@@ -3,10 +3,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registrationForm');
     const successMessage = document.getElementById('successMessage');
 
-    // City selection - Show "Other" field when "Other" is selected
+    // Multi-Step Form - City Selection First
     const citySelect = document.getElementById('city');
     const otherCityGroup = document.getElementById('otherCityGroup');
     const otherCityInput = document.getElementById('otherCity');
+    const continueBtn = document.getElementById('continueBtn');
+    const citySection = document.getElementById('citySection');
+    const mainFormContent = document.getElementById('mainFormContent');
+    const submitSection = document.getElementById('submitSection');
+
+    // Enable/Disable Continue Button based on city selection
+    function updateContinueButton() {
+        if (citySelect.value && citySelect.value !== '') {
+            if (citySelect.value === 'Other') {
+                // If "Other" is selected, check if otherCity field has value
+                continueBtn.disabled = !otherCityInput.value.trim();
+            } else {
+                continueBtn.disabled = false;
+            }
+        } else {
+            continueBtn.disabled = true;
+        }
+    }
 
     citySelect.addEventListener('change', function() {
         if (this.value === 'Other') {
@@ -17,6 +35,37 @@ document.addEventListener('DOMContentLoaded', function() {
             otherCityInput.required = false;
             otherCityInput.value = '';
         }
+        updateContinueButton();
+    });
+
+    otherCityInput.addEventListener('input', function() {
+        updateContinueButton();
+    });
+
+    // Continue Button - Show Main Form
+    continueBtn.addEventListener('click', function() {
+        // Smooth transition
+        citySection.style.opacity = '0';
+        citySection.style.transform = 'translateY(-20px)';
+        
+        setTimeout(() => {
+            citySection.style.display = 'none';
+            mainFormContent.style.display = 'block';
+            submitSection.style.display = 'block';
+            
+            // Smooth entrance animation
+            mainFormContent.style.opacity = '0';
+            mainFormContent.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                mainFormContent.style.transition = 'all 0.6s ease';
+                mainFormContent.style.opacity = '1';
+                mainFormContent.style.transform = 'translateY(0)';
+                
+                // Scroll to top of form
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 50);
+        }, 400);
     });
 
     // File upload preview functionality for 3 photos
