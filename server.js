@@ -3,7 +3,11 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
-require('dotenv').config(); // Load environment variables
+
+// Load environment variables (Vercel provides them automatically)
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -108,17 +112,20 @@ async function sendEmailNotification(registration) {
     }
 }
 
-// Create necessary directories
+// Create necessary directories (only in non-serverless environment)
 const uploadsDir = path.join(__dirname, 'uploads');
 const photosDir = path.join(uploadsDir, 'photos');
 const videosDir = path.join(uploadsDir, 'videos');
 const dataDir = path.join(__dirname, 'data');
 
-[uploadsDir, photosDir, videosDir, dataDir].forEach(dir => {
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-});
+// Only create directories if not in Vercel serverless environment
+if (process.env.VERCEL !== '1') {
+    [uploadsDir, photosDir, videosDir, dataDir].forEach(dir => {
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+    });
+}
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -411,34 +418,37 @@ app.use((error, req, res, next) => {
     });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log('===========================================');
-    console.log('Kids Junior Fashion Week Registration System');
-    console.log('===========================================');
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`Admin Dashboard: http://localhost:${PORT}/admin`);
-    console.log('===========================================');
-    
-    // Security status
-    if (ADMIN_AUTH_ENABLED) {
-        console.log('✅ Admin authentication: ENABLED');
-        console.log(`   Username: ${process.env.ADMIN_USERNAME}`);
-    } else {
-        console.log('⚠️  Admin authentication: DISABLED');
-        console.log('   Set ADMIN_USERNAME and ADMIN_PASSWORD in .env to enable');
-    }
-    
-    // Email notification status
-    if (EMAIL_ENABLED && transporter) {
-        console.log('✅ Email notifications: ENABLED');
-        console.log(`   Sending to: ${process.env.NOTIFICATION_EMAIL}`);
-    } else {
-        console.log('ℹ️  Email notifications: DISABLED');
-    }
-    
-    console.log('===========================================');
-});
+// Start server (only if not in serverless environment)
+if (process.env.VERCEL !== '1') {
+    app.listen(PORT, () => {
+        console.log('===========================================');
+        console.log('Kids Junior Fashion Week Registration System');
+        console.log('===========================================');
+        console.log(`Server running on http://localhost:${PORT}`);
+        console.log(`Admin Dashboard: http://localhost:${PORT}/admin`);
+        console.log('===========================================');
+        
+        // Security status
+        if (ADMIN_AUTH_ENABLED) {
+            console.log('✅ Admin authentication: ENABLED');
+            console.log(`   Username: ${process.env.ADMIN_USERNAME}`);
+        } else {
+            console.log('⚠️  Admin authentication: DISABLED');
+            console.log('   Set ADMIN_USERNAME and ADMIN_PASSWORD in .env to enable');
+        }
+        
+        // Email notification status
+        if (EMAIL_ENABLED && transporter) {
+            console.log('✅ Email notifications: ENABLED');
+            console.log(`   Sending to: ${process.env.NOTIFICATION_EMAIL}`);
+        } else {
+            console.log('ℹ️  Email notifications: DISABLED');
+        }
+        
+        console.log('===========================================');
+    });
+}
 
+// Export for serverless (Vercel)
 module.exports = app;
 
