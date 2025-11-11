@@ -112,19 +112,25 @@ async function sendEmailNotification(registration) {
     }
 }
 
-// Create necessary directories (only in non-serverless environment)
-const uploadsDir = path.join(__dirname, 'uploads');
+// Create necessary directories (use /tmp for Vercel serverless)
+const isVercel = process.env.VERCEL === '1';
+const baseDir = isVercel ? '/tmp' : __dirname;
+
+const uploadsDir = path.join(baseDir, 'uploads');
 const photosDir = path.join(uploadsDir, 'photos');
 const videosDir = path.join(uploadsDir, 'videos');
-const dataDir = path.join(__dirname, 'data');
+const dataDir = path.join(baseDir, 'data');
 
-// Only create directories if not in Vercel serverless environment
-if (process.env.VERCEL !== '1') {
+// Create directories with proper error handling
+try {
     [uploadsDir, photosDir, videosDir, dataDir].forEach(dir => {
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
     });
+} catch (error) {
+    console.warn('⚠️ Could not create directories:', error.message);
+    console.log('Files will be stored in memory only (Vercel serverless limitation)');
 }
 
 // Configure multer for file uploads
@@ -224,7 +230,10 @@ app.get('/api/registrations/:id', adminAuthMiddleware, (req, res) => {
 app.post('/api/submit', upload.fields([
     { name: 'photos', maxCount: 3 },
     { name: 'introVideo', maxCount: 1 }
-]), (req, res) => {
+]), async (req, res) => {
+    // Ensure we always return JSON
+    res.setHeader('Content-Type', 'application/json');
+    
     try {
         // Generate unique ID
         const registrationId = 'REG-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -284,28 +293,40 @@ app.post('/api/submit', upload.fields([
         }
         
         registrations.push(registration);
-        fs.writeFileSync(dataFile, JSON.stringify(registrations, null, 2));
+        
+        // Try to save to file (may fail on Vercel serverless)
+        try {
+            fs.writeFileSync(dataFile, JSON.stringify(registrations, null, 2));
+            console.log(`✅ Registration saved to file: ${registrationId}`);
+        } catch (writeError) {
+            console.warn('⚠️ Could not save to file (Vercel limitation):', writeError.message);
+            console.log('Registration stored in memory only - will be lost on redeployment');
+        }
         
         console.log(`New registration received: ${registrationId}`);
         console.log(`Child: ${registration.childInfo.firstName} ${registration.childInfo.lastName}`);
         console.log(`Parent: ${registration.parentInfo.firstName} ${registration.parentInfo.lastName}`);
         
         // Send email notification (if enabled)
-        sendEmailNotification(registration).catch(err => {
-            console.error('Email notification error:', err);
-        });
+        if (EMAIL_ENABLED && transporter) {
+            sendEmailNotification(registration).catch(err => {
+                console.error('Email notification error:', err);
+            });
+        }
         
         res.json({
             success: true,
             message: 'Registration submitted successfully!',
-            registrationId: registrationId
+            registrationId: registrationId,
+            note: isVercel ? 'Files uploaded to temporary storage (Vercel serverless)' : null
         });
         
     } catch (error) {
         console.error('Error processing registration:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to process registration. Please try again.'
+            error: 'Failed to process registration. Please try again.',
+            details: error.message
         });
     }
 });
