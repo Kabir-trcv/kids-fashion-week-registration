@@ -439,14 +439,16 @@ app.use((error, req, res, next) => {
     });
 });
 
-// Start server (only if not in serverless environment)
-if (process.env.VERCEL !== '1') {
-    app.listen(PORT, () => {
+// Start server (skip only for Vercel serverless, run for Render/Railway/local)
+const isServerless = process.env.VERCEL === '1';
+
+if (!isServerless) {
+    const server = app.listen(PORT, '0.0.0.0', () => {
         console.log('===========================================');
         console.log('Kids Junior Fashion Week Registration System');
         console.log('===========================================');
-        console.log(`Server running on http://localhost:${PORT}`);
-        console.log(`Admin Dashboard: http://localhost:${PORT}/admin`);
+        console.log(`Server running on port ${PORT}`);
+        console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
         console.log('===========================================');
         
         // Security status
@@ -455,7 +457,7 @@ if (process.env.VERCEL !== '1') {
             console.log(`   Username: ${process.env.ADMIN_USERNAME}`);
         } else {
             console.log('⚠️  Admin authentication: DISABLED');
-            console.log('   Set ADMIN_USERNAME and ADMIN_PASSWORD in .env to enable');
+            console.log('   Set ADMIN_USERNAME and ADMIN_PASSWORD');
         }
         
         // Email notification status
@@ -467,6 +469,14 @@ if (process.env.VERCEL !== '1') {
         }
         
         console.log('===========================================');
+        console.log(`✅ Server is ready and listening on port ${PORT}`);
+        console.log('===========================================');
+    });
+    
+    // Handle server errors
+    server.on('error', (error) => {
+        console.error('❌ Server error:', error);
+        process.exit(1);
     });
 }
 
