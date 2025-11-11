@@ -607,6 +607,16 @@
                     <span class="status-badge status-${reg.status}">${reg.status}</span>
                 </div>
                 <div class="registration-body">
+                    ${reg.city ? `
+                    <div class="info-section">
+                        <h3>🏙️ City</h3>
+                        <div class="info-item">
+                            <span class="info-label">Registration City</span>
+                            <span class="info-value" style="font-size: 18px; font-weight: bold; color: var(--primary-color);">${reg.city}</span>
+                        </div>
+                    </div>
+                    ` : ''}
+
                     <div class="info-section">
                         <h3>👶 Child Information</h3>
                         <div class="info-grid">
@@ -838,6 +848,7 @@
 
             const headers = [
                 'Registration ID',
+                'City',
                 'Child First Name',
                 'Child Last Name',
                 'Date of Birth',
@@ -860,6 +871,7 @@
 
             const rows = filteredRegistrations.map(reg => [
                 reg.id,
+                reg.city || '',
                 reg.childInfo.firstName,
                 reg.childInfo.lastName,
                 reg.childInfo.dateOfBirth,

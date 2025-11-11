@@ -3,6 +3,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registrationForm');
     const successMessage = document.getElementById('successMessage');
 
+    // City selection - Show "Other" field when "Other" is selected
+    const citySelect = document.getElementById('city');
+    const otherCityGroup = document.getElementById('otherCityGroup');
+    const otherCityInput = document.getElementById('otherCity');
+
+    citySelect.addEventListener('change', function() {
+        if (this.value === 'Other') {
+            otherCityGroup.style.display = 'block';
+            otherCityInput.required = true;
+        } else {
+            otherCityGroup.style.display = 'none';
+            otherCityInput.required = false;
+            otherCityInput.value = '';
+        }
+    });
+
     // File upload preview functionality for 3 photos
     const photosInput = document.getElementById('photos');
     const photosPreview = document.getElementById('photosPreview');

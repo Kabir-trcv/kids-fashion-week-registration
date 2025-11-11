@@ -33,6 +33,37 @@
         </div>
 
         <form id="registrationForm" class="registration-form">
+            <!-- City Selection Section -->
+            <div class="form-section city-section">
+                <h2 class="section-title">
+                    <span class="icon">🏙️</span>
+                    Select Your City
+                </h2>
+                
+                <div class="form-group">
+                    <label for="city">City <span class="required">*</span></label>
+                    <select id="city" name="city" required>
+                        <option value="">Select Your City</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                        <option value="Jaipur">Jaipur</option>
+                        <option value="Surat">Surat</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="otherCityGroup" style="display: none;">
+                    <label for="otherCity">Specify Your City <span class="required">*</span></label>
+                    <input type="text" id="otherCity" name="otherCity" placeholder="Enter your city name">
+                </div>
+            </div>
+
             <!-- Child Information Section -->
             <div class="form-section">
                 <h2 class="section-title">

@@ -249,6 +249,7 @@ app.post('/api/submit', upload.fields([
         // Create registration object
         const registration = {
             id: registrationId,
+            city: req.body.city === 'Other' ? req.body.otherCity : req.body.city,
             childInfo: {
                 firstName: req.body.childFirstName,
                 lastName: req.body.childLastName,

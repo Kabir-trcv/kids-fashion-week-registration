@@ -216,6 +216,31 @@ body {
 .form-section:nth-child(5) { animation-delay: 0.5s; }
 .form-section:nth-child(6) { animation-delay: 0.6s; }
 
+/* City Section - Special Styling */
+.city-section {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.15));
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.city-section .section-title {
+    color: #FF6F00;
+}
+
+.city-section select {
+    font-size: 16px;
+    font-weight: 500;
+    background: linear-gradient(to right, #fff, #fff9e6);
+    border: 2px solid #FFD700;
+}
+
+.city-section select:focus {
+    border-color: #FF6F00;
+    box-shadow: 0 0 0 3px rgba(255, 111, 0, 0.1);
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
