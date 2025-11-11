@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Kids Junior Fashion Week</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #ff6b9d;
+            --secondary-color: #c44569;
+            --accent-color: #ffa502;
+            --success-color: #00b894;
+            --error-color: #d63031;
+            --warning-color: #fdcb6e;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .admin-header h1 {
+            color: var(--text-dark);
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-card .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filters select,
+        .filters input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .filters select:focus,
+        .filters input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .filters button {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .filters button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .registrations-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .registration-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .registration-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .registration-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .registration-id {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .registration-date {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: var(--warning-color);
+            color: var(--text-dark);
+        }
+
+        .status-approved {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-rejected {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .registration-body {
+            padding: 20px;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-section h3 {
+            color: var(--text-dark);
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .media-preview {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .media-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .media-preview img:hover {
+            transform: scale(1.05);
+        }
+
+        .video-thumb {
+            width: 150px;
+            height: 100px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .video-thumb:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-approve {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-reject {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background: #2d3436;
+            color: white;
+        }
+
+        .btn-view {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .empty-state .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--error-color);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .modal-content img,
+        .modal-content video {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filters select,
+            .filters input,
+            .filters button {
+                width: 100%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .refresh-btn {
+            padding: 10px 20px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background: #e59400;
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>🎭 Admin Dashboard</h1>
+                <p style="color: var(--text-light); margin-top: 5px;">Kids Junior Fashion Week - Registration Management</p>
+            </div>
+            <button class="refresh-btn" onclick="loadRegistrations()">
+                <span>↻</span>
+                <span>Refresh</span>
+            </button>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="icon">📊</div>
+                <div class="number" id="totalCount">0</div>
+                <div class="label">Total Registrations</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">⏳</div>
+                <div class="number" id="pendingCount">0</div>
+                <div class="label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">✅</div>
+                <div class="number" id="approvedCount">0</div>
+                <div class="label">Approved</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">❌</div>
+                <div class="number" id="rejectedCount">0</div>
+                <div class="label">Rejected</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <select id="statusFilter" onchange="filterRegistrations()">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="Search by name, email, or ID..." oninput="filterRegistrations()">
+            <button onclick="exportToCSV()">📥 Export CSV</button>
+        </div>
+
+        <div id="loadingState" class="loading">
+            Loading registrations...
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="icon">📭</div>
+            <h2>No Registrations Yet</h2>
+            <p>When users submit the registration form, their information will appear here.</p>
+        </div>
+
+        <div class="registrations-grid" id="registrationsGrid"></div>
+    </div>
+
+    <!-- Modal for viewing media -->
+    <div class="modal" id="mediaModal">
+        <div class="modal-content" id="modalContent">
+            <button class="modal-close" onclick="closeModal()">×</button>
+        </div>
+    </div>
+
+    <script>
+        let allRegistrations = [];
+        let filteredRegistrations = [];
+
+        // Load registrations on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadRegistrations();
+        });
+
+        // Get auth credentials from browser's basic auth
+        function getAuthHeaders() {
+            const authHeader = document.cookie.split('; ').find(row => row.startsWith('auth='));
+            if (authHeader) {
+                return { 'Authorization': authHeader.split('=')[1] };
+            }
+            return {};
+        }
+
+        async function loadRegistrations() {
+            try {
+                document.getElementById('loadingState').style.display = 'block';
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('registrationsGrid').innerHTML = '';
+
+                const response = await fetch('/api/registrations', {
+                    credentials: 'include'
+                });
+                
+                if (response.status === 401) {
+                    alert('Session expired. Please refresh the page and login again.');
+                    return;
+                }
+                
+                allRegistrations = await response.json();
+                filteredRegistrations = [...allRegistrations];
+
+                updateStats();
+                displayRegistrations();
+
+                document.getElementById('loadingState').style.display = 'none';
+
+                if (allRegistrations.length === 0) {
+                    document.getElementById('emptyState').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading registrations:', error);
+                document.getElementById('loadingState').innerHTML = 
+                    '<div style="color: var(--error-color);">Failed to load registrations. Please refresh the page.</div>';
+            }
+        }
+
+        function updateStats() {
+            const total = allRegistrations.length;
+            const pending = allRegistrations.filter(r => r.status === 'pending').length;
+            const approved = allRegistrations.filter(r => r.status === 'approved').length;
+            const rejected = allRegistrations.filter(r => r.status === 'rejected').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('rejectedCount').textContent = rejected;
+        }
+
+        function displayRegistrations() {
+            const grid = document.getElementById('registrationsGrid');
+            grid.innerHTML = '';
+
+            if (filteredRegistrations.length === 0 && allRegistrations.length > 0) {
+                grid.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><h2>No Results Found</h2><p>Try adjusting your filters or search query.</p></div>';
+                return;
+            }
+
+            filteredRegistrations.forEach(reg => {
+                const card = createRegistrationCard(reg);
+                grid.appendChild(card);
+            });
+        }
+
+        function createRegistrationCard(reg) {
+            const card = document.createElement('div');
+            card.className = 'registration-card';
+            
+            const submittedDate = new Date(reg.submittedAt).toLocaleString();
+
+            card.innerHTML = `
+                <div class="registration-header">
+                    <div>
+                        <div class="registration-id">${reg.id}</div>
+                        <div class="registration-date">Submitted: ${submittedDate}</div>
+                    </div>
+                    <span class="status-badge status-${reg.status}">${reg.status}</span>
+                </div>
+                <div class="registration-body">
+                    <div class="info-section">
+                        <h3>👶 Child Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Name</span>
+                                <span class="info-value">${reg.childInfo.firstName} ${reg.childInfo.lastName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Date of Birth</span>
+                                <span class="info-value">${reg.childInfo.dateOfBirth}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Age</span>
+                                <span class="info-value">${reg.childInfo.age} years</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Gender</span>
+                                <span class="info-value">${reg.childInfo.gender}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Height</span>
+                                <span class="info-value">${reg.childInfo.height} cm</span>
+                            </div>
+                            ${reg.childInfo.weight ? `
+                            <div class="info-item">
+                                <span class="info-label">Weight</span>
+                                <span class="info-value">${reg.childInfo.weight} kg</span>
+                            </div>` : ''}
+                            ${reg.childInfo.shoeSize ? `
+                            <div class="info-item">
+                                <span class="info-label">Shoe Size</span>
+                                <span class="info-value">${reg.childInfo.shoeSize}</span>
+                            </div>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>👨‍👩‍👧 Parent/Guardian Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Name</span>
+                                <span class="info-value">${reg.parentInfo.firstName} ${reg.parentInfo.lastName}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Relationship</span>
+                                <span class="info-value">${reg.parentInfo.relationship}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email</span>
+                                <span class="info-value">${reg.parentInfo.email}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone</span>
+                                <span class="info-value">${reg.parentInfo.phone}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Emergency Contact</span>
+                                <span class="info-value">${reg.parentInfo.emergencyContact}</span>
+                            </div>
+                            <div class="info-item" style="grid-column: 1 / -1;">
+                                <span class="info-label">Address</span>
+                                <span class="info-value">${reg.parentInfo.address}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    ${reg.socialMedia.instagram ? `
+                    <div class="info-section">
+                        <h3>📱 Social Media</h3>
+                        <div class="info-item">
+                            <span class="info-label">Instagram</span>
+                            <span class="info-value">${reg.socialMedia.instagram}</span>
+                        </div>
+                    </div>` : ''}
+
+                    <div class="info-section">
+                        <h3>📸 Photos</h3>
+                        <div class="media-preview">
+                            ${reg.media.photos.map(photo => 
+                                `<img src="${photo}" alt="Child photo" onclick="viewMedia('${photo}', 'image')">`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3>🎬 Introduction Video</h3>
+                        <div class="video-thumb" onclick="viewMedia('${reg.media.video}', 'video')">
+                            <div>▶️ View Video</div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        ${reg.status !== 'approved' ? 
+                            `<button class="btn btn-approve" onclick="updateStatus('${reg.id}', 'approved')">✅ Approve</button>` : ''}
+                        ${reg.status !== 'rejected' ? 
+                            `<button class="btn btn-reject" onclick="updateStatus('${reg.id}', 'rejected')">❌ Reject</button>` : ''}
+                        ${reg.status !== 'pending' ? 
+                            `<button class="btn btn-view" onclick="updateStatus('${reg.id}', 'pending')">⏳ Mark Pending</button>` : ''}
+                        <button class="btn btn-delete" onclick="deleteRegistration('${reg.id}')">🗑️ Delete</button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function filterRegistrations() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredRegistrations = allRegistrations.filter(reg => {
+                // Status filter
+                if (statusFilter !== 'all' && reg.status !== statusFilter) {
+                    return false;
+                }
+
+                // Search filter
+                if (searchQuery) {
+                    const searchableText = [
+                        reg.id,
+                        reg.childInfo.firstName,
+                        reg.childInfo.lastName,
+                        reg.parentInfo.firstName,
+                        reg.parentInfo.lastName,
+                        reg.parentInfo.email,
+                        reg.parentInfo.phone
+                    ].join(' ').toLowerCase();
+
+                    if (!searchableText.includes(searchQuery)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            displayRegistrations();
+        }
+
+        async function updateStatus(id, newStatus) {
+            if (!confirm(`Are you sure you want to ${newStatus} this registration?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/registrations/${id}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    await loadRegistrations();
+                    alert(`Registration ${newStatus} successfully!`);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Failed to update status. Please try again.');
+            }
+        }
+
+        async function deleteRegistration(id) {
+            if (!confirm('Are you sure you want to DELETE this registration? This action cannot be undone!')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/registrations/${id}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    await loadRegistrations();
+                    alert('Registration deleted successfully!');
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error deleting registration:', error);
+                alert('Failed to delete registration. Please try again.');
+            }
+        }
+
+        function viewMedia(path, type) {
+            const modal = document.getElementById('mediaModal');
+            const content = document.getElementById('modalContent');
+            
+            let mediaElement;
+            if (type === 'image') {
+                mediaElement = `<img src="${path}" alt="Media">`;
+            } else {
+                mediaElement = `<video src="${path}" controls autoplay style="max-width: 100%;"></video>`;
+            }
+            
+            content.innerHTML = `
+                <button class="modal-close" onclick="closeModal()">×</button>
+                ${mediaElement}
+            `;
+            
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('mediaModal');
+            modal.classList.remove('show');
+            
+            // Stop any playing videos
+            const video = modal.querySelector('video');
+            if (video) {
+                video.pause();
+            }
+        }
+
+        function exportToCSV() {
+            if (filteredRegistrations.length === 0) {
+                alert('No registrations to export!');
+                return;
+            }
+
+            const headers = [
+                'Registration ID',
+                'Child First Name',
+                'Child Last Name',
+                'Date of Birth',
+                'Age',
+                'Gender',
+                'Height (cm)',
+                'Weight (kg)',
+                'Shoe Size',
+                'Parent First Name',
+                'Parent Last Name',
+                'Relationship',
+                'Email',
+                'Phone',
+                'Emergency Contact',
+                'Address',
+                'Instagram',
+                'Status',
+                'Submitted At'
+            ];
+
+            const rows = filteredRegistrations.map(reg => [
+                reg.id,
+                reg.childInfo.firstName,
+                reg.childInfo.lastName,
+                reg.childInfo.dateOfBirth,
+                reg.childInfo.age,
+                reg.childInfo.gender,
+                reg.childInfo.height,
+                reg.childInfo.weight || '',
+                reg.childInfo.shoeSize || '',
+                reg.parentInfo.firstName,
+                reg.parentInfo.lastName,
+                reg.parentInfo.relationship,
+                reg.parentInfo.email,
+                reg.parentInfo.phone,
+                reg.parentInfo.emergencyContact,
+                reg.parentInfo.address.replace(/\n/g, ' '),
+                reg.socialMedia.instagram || '',
+                reg.status,
+                new Date(reg.submittedAt).toLocaleString()
+            ]);
+
+            let csvContent = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csvContent += row.map(cell => `"${cell}"`).join(',') + '\n';
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `registrations_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('mediaModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
+

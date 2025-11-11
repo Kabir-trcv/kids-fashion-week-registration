@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Junior Fashion Week - Registration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Video Background -->
+    <div class="video-background">
+        <video autoplay muted loop playsinline id="bgVideo">
+            <source src="background-video.mp4" type="video/mp4">
+            <source src="background-video.webm" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <div class="container">
+        <div class="form-header">
+            <div class="company-logo">
+                <img src="logo.png" alt="Company Logo" id="companyLogo">
+                <div class="presents-text">Presents</div>
+            </div>
+            <div class="logo-animation">
+                <div class="star star1">★</div>
+                <div class="star star2">★</div>
+                <div class="star star3">★</div>
+            </div>
+            <h1 class="title">Kids Junior Fashion Week</h1>
+            <p class="subtitle">Registration Form 2025</p>
+        </div>
+
+        <form id="registrationForm" class="registration-form">
+            <!-- Child Information Section -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">👶</span>
+                    Child Information
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="childFirstName">First Name <span class="required">*</span></label>
+                        <input type="text" id="childFirstName" name="childFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="childLastName">Last Name <span class="required">*</span></label>
+                        <input type="text" id="childLastName" name="childLastName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of Birth <span class="required">*</span></label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age <span class="required">*</span></label>
+                        <input type="number" id="age" name="age" min="3" max="16" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">Gender <span class="required">*</span></label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Height (cm) <span class="required">*</span></label>
+                        <input type="number" id="height" name="height" min="80" max="200" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" min="10" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="shoeSize">Shoe Size</label>
+                        <input type="text" id="shoeSize" name="shoeSize" placeholder="e.g., 12, 2Y">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parent/Guardian Information -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">👨‍👩‍👧</span>
+                    Parent/Guardian Information
+                </h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parentFirstName">First Name <span class="required">*</span></label>
+                        <input type="text" id="parentFirstName" name="parentFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="parentLastName">Last Name <span class="required">*</span></label>
+                        <input type="text" id="parentLastName" name="parentLastName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="relationship">Relationship <span class="required">*</span></label>
+                        <select id="relationship" name="relationship" required>
+                            <option value="">Select Relationship</option>
+                            <option value="mother">Mother</option>
+                            <option value="father">Father</option>
+                            <option value="guardian">Guardian</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" placeholder="+1 (234) 567-8900" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="parent@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Full Address <span class="required">*</span></label>
+                    <textarea id="address" name="address" rows="2" placeholder="Street, City, State, ZIP Code" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="emergencyContact">Emergency Contact Number <span class="required">*</span></label>
+                    <input type="tel" id="emergencyContact" name="emergencyContact" placeholder="+1 (234) 567-8900" required>
+                </div>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">📸</span>
+                    Photo Upload
+                </h2>
+                
+                <div class="form-group">
+                    <label for="photos">Child's Photos (3 Required) <span class="required">*</span></label>
+                    <p class="upload-instruction">Please upload exactly 3 photos: Left Side, Right Side, and Front View</p>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="photos" name="photos" accept="image/*" multiple required>
+                        <label for="photos" class="file-upload-label">
+                            <span class="upload-icon">📁</span>
+                            <span class="upload-text">Click to upload or drag and drop</span>
+                            <span class="upload-hint">3 Photos Required: LEFT, RIGHT, FRONT (MAX. 5MB each)</span>
+                        </label>
+                        <div class="file-preview-grid" id="photosPreview">
+                            <div class="photo-slot" data-position="left">
+                                <div class="photo-placeholder">
+                                    <span class="placeholder-icon">📷</span>
+                                    <span class="placeholder-text">Left Side</span>
+                                </div>
+                            </div>
+                            <div class="photo-slot" data-position="right">
+                                <div class="photo-placeholder">
+                                    <span class="placeholder-icon">📷</span>
+                                    <span class="placeholder-text">Right Side</span>
+                                </div>
+                            </div>
+                            <div class="photo-slot" data-position="front">
+                                <div class="photo-placeholder">
+                                    <span class="placeholder-icon">📷</span>
+                                    <span class="placeholder-text">Front View</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Upload -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">🎬</span>
+                    Introduction Video
+                </h2>
+                
+                <div class="form-group">
+                    <label for="introVideo">Child's Introduction Video (30 seconds) <span class="required">*</span></label>
+                    <p class="upload-instruction">Upload a 30-second video introducing your child. Show their personality, walk, and expressions.</p>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="introVideo" name="introVideo" accept="video/*" required>
+                        <label for="introVideo" class="file-upload-label video-upload">
+                            <span class="upload-icon">🎥</span>
+                            <span class="upload-text">Click to upload video</span>
+                            <span class="upload-hint">MP4, MOV, or AVI (MAX. 30 seconds, MAX. 50MB)</span>
+                        </label>
+                        <div class="video-preview" id="videoPreview"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Links -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <span class="icon">📱</span>
+                    Social Media
+                </h2>
+                
+                <div class="form-group">
+                    <label for="instagram">Instagram Handle</label>
+                    <div class="social-input-wrapper">
+                        <span class="social-icon">📷</span>
+                        <input type="text" id="instagram" name="instagram" placeholder="@username">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="form-section">
+                <div class="terms-box">
+                    <h3>Terms & Conditions</h3>
+                    <div class="terms-content">
+                        <p>By submitting this registration form, I hereby:</p>
+                        <ul>
+                            <li>Confirm that all information provided is accurate and truthful</li>
+                            <li>Grant permission for my child to participate in the Kids Junior Fashion Week</li>
+                            <li>Allow the use of photographs and videos taken during the event for promotional purposes</li>
+                            <li>Understand that participation fees are non-refundable</li>
+                            <li>Agree to follow all event rules and guidelines</li>
+                            <li>Release organizers from liability for any injuries during the event</li>
+                        </ul>
+                    </div>
+                    
+                    <label class="checkbox-label terms-checkbox">
+                        <input type="checkbox" id="termsAgree" name="termsAgree" required>
+                        <span class="checkbox-custom"></span>
+                        I agree to the Terms & Conditions <span class="required">*</span>
+                    </label>
+
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="photoConsent" name="photoConsent" required>
+                        <span class="checkbox-custom"></span>
+                        I consent to photography and videography <span class="required">*</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+                <button type="submit" class="submit-btn">
+                    <span class="btn-text">Submit Registration</span>
+                    <span class="btn-icon">🎉</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">✓</div>
+            <h2>Registration Successful!</h2>
+            <p>Thank you for registering. We'll contact you soon with further details.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
