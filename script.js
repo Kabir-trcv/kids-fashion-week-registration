@@ -1,30 +1,25 @@
-// Form validation and interaction
+// Multi-Step Form Handler
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registrationForm');
     const successMessage = document.getElementById('successMessage');
+    
+    // Step elements
+    const formSteps = document.querySelectorAll('.form-step');
+    const stepIndicators = document.querySelectorAll('.step-indicator .step');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    let currentStep = 1;
+    const totalSteps = formSteps.length;
 
-    // Multi-Step Form - City Selection First
+    // Initialize first step
+    showStep(currentStep);
+
+    // City selection handling
     const citySelect = document.getElementById('city');
     const otherCityGroup = document.getElementById('otherCityGroup');
     const otherCityInput = document.getElementById('otherCity');
-    const continueBtn = document.getElementById('continueBtn');
-    const citySection = document.getElementById('citySection');
-    const mainFormContent = document.getElementById('mainFormContent');
-    const submitSection = document.getElementById('submitSection');
-
-    // Enable/Disable Continue Button based on city selection
-    function updateContinueButton() {
-        if (citySelect.value && citySelect.value !== '') {
-            if (citySelect.value === 'Other') {
-                // If "Other" is selected, check if otherCity field has value
-                continueBtn.disabled = !otherCityInput.value.trim();
-            } else {
-                continueBtn.disabled = false;
-            }
-        } else {
-            continueBtn.disabled = true;
-        }
-    }
 
     citySelect.addEventListener('change', function() {
         if (this.value === 'Other') {
@@ -35,38 +30,210 @@ document.addEventListener('DOMContentLoaded', function() {
             otherCityInput.required = false;
             otherCityInput.value = '';
         }
-        updateContinueButton();
     });
 
-    otherCityInput.addEventListener('input', function() {
-        updateContinueButton();
+    // Navigation button handlers
+    nextBtn.addEventListener('click', function() {
+        if (validateStep(currentStep)) {
+            currentStep++;
+            showStep(currentStep);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
     });
 
-    // Continue Button - Show Main Form
-    continueBtn.addEventListener('click', function() {
-        // Smooth transition
-        citySection.style.opacity = '0';
-        citySection.style.transform = 'translateY(-20px)';
+    prevBtn.addEventListener('click', function() {
+        currentStep--;
+        showStep(currentStep);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Show specific step
+    function showStep(step) {
+        // Hide all steps
+        formSteps.forEach((formStep) => {
+            formStep.classList.remove('active');
+        });
+
+        // Show current step
+        formSteps[step - 1].classList.add('active');
+
+        // Update step indicators
+        updateStepIndicators(step);
+
+        // Update navigation buttons
+        updateNavigationButtons(step);
+
+        // Update current step variable
+        currentStep = step;
+    }
+
+    // Update step indicators
+    function updateStepIndicators(step) {
+        stepIndicators.forEach((indicator, index) => {
+            const stepNumber = index + 1;
+            
+            // Remove all classes
+            indicator.classList.remove('active', 'completed');
+            
+            // Add appropriate class
+            if (stepNumber < step) {
+                indicator.classList.add('completed');
+            } else if (stepNumber === step) {
+                indicator.classList.add('active');
+            }
+        });
+    }
+
+    // Update navigation buttons
+    function updateNavigationButtons(step) {
+        // Previous button
+        if (step === 1) {
+            prevBtn.style.display = 'none';
+        } else {
+            prevBtn.style.display = 'inline-flex';
+        }
+
+        // Next and Submit buttons
+        if (step === totalSteps) {
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'inline-flex';
+        } else {
+            nextBtn.style.display = 'inline-flex';
+            submitBtn.style.display = 'none';
+        }
+    }
+
+    // Validate current step
+    function validateStep(step) {
+        const currentFormStep = formSteps[step - 1];
+        const inputs = currentFormStep.querySelectorAll('input[required], select[required], textarea[required]');
         
-        setTimeout(() => {
-            citySection.style.display = 'none';
-            mainFormContent.style.display = 'block';
-            submitSection.style.display = 'block';
+        let isValid = true;
+        let firstInvalidField = null;
+
+        inputs.forEach(input => {
+            // Skip if input is hidden (like otherCity when not needed)
+            if (input.offsetParent === null && input.type !== 'checkbox') {
+                return;
+            }
+
+            if (input.type === 'checkbox') {
+                if (!input.checked) {
+                    isValid = false;
+                    if (!firstInvalidField) firstInvalidField = input;
+                    input.parentElement.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        input.parentElement.style.animation = '';
+                    }, 500);
+                }
+            } else if (input.type === 'file') {
+                if (!input.files || input.files.length === 0) {
+                    isValid = false;
+                    if (!firstInvalidField) firstInvalidField = input;
+                    showError(input, 'This field is required');
+                }
+            } else {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    if (!firstInvalidField) firstInvalidField = input;
+                    input.style.borderColor = 'var(--error-color)';
+                    showError(input, 'This field is required');
+                } else {
+                    input.style.borderColor = '';
+                    hideError(input);
+                }
+            }
+        });
+
+        // Additional validation for specific steps
+        if (step === 1) {
+            // City validation
+            if (!citySelect.value) {
+                isValid = false;
+                alert('Please select your city');
+                return false;
+            }
+            if (citySelect.value === 'Other' && !otherCityInput.value.trim()) {
+                isValid = false;
+                alert('Please specify your city');
+                return false;
+            }
+        }
+
+        if (step === 2) {
+            // Child information validation
+            const age = parseInt(document.getElementById('age').value);
+            if (age < 3 || age > 16) {
+                isValid = false;
+                alert('Age must be between 3 and 16 years!');
+                return false;
+            }
+        }
+
+        if (step === 4) {
+            // Photo validation
+            const photosInput = document.getElementById('photos');
+            if (!photosInput.files || photosInput.files.length !== 3) {
+                isValid = false;
+                alert('Please upload exactly 3 photos (Left, Right, Front)!');
+                return false;
+            }
+
+            // Video validation
+            const introVideo = document.getElementById('introVideo');
+            if (!introVideo.files || introVideo.files.length === 0) {
+                isValid = false;
+                alert('Please upload a 30-second introduction video!');
+                return false;
+            }
+        }
+
+        if (step === 5) {
+            // Terms validation
+            const termsAgree = document.getElementById('termsAgree');
+            const photoConsent = document.getElementById('photoConsent');
             
-            // Smooth entrance animation
-            mainFormContent.style.opacity = '0';
-            mainFormContent.style.transform = 'translateY(20px)';
-            
-            setTimeout(() => {
-                mainFormContent.style.transition = 'all 0.6s ease';
-                mainFormContent.style.opacity = '1';
-                mainFormContent.style.transform = 'translateY(0)';
-                
-                // Scroll to top of form
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 50);
-        }, 400);
-    });
+            if (!termsAgree.checked) {
+                isValid = false;
+                alert('Please agree to the Terms & Conditions!');
+                return false;
+            }
+
+            if (!photoConsent.checked) {
+                isValid = false;
+                alert('Please provide consent for photography and videography!');
+                return false;
+            }
+        }
+
+        if (!isValid && firstInvalidField) {
+            firstInvalidField.focus();
+        }
+
+        return isValid;
+    }
+
+    // Show error message
+    function showError(input, message) {
+        let errorElement = input.parentElement.querySelector('.error-message');
+        if (!errorElement) {
+            errorElement = document.createElement('div');
+            errorElement.className = 'error-message';
+            errorElement.style.color = 'var(--error-color)';
+            errorElement.style.fontSize = '13px';
+            errorElement.style.marginTop = '5px';
+            input.parentElement.appendChild(errorElement);
+        }
+        errorElement.textContent = message;
+    }
+
+    // Hide error message
+    function hideError(input) {
+        const errorElement = input.parentElement.querySelector('.error-message');
+        if (errorElement) {
+            errorElement.remove();
+        }
+    }
 
     // File upload preview functionality for 3 photos
     const photosInput = document.getElementById('photos');
@@ -237,48 +404,15 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Validate 3 photos upload
-        if (!photosInput.files || photosInput.files.length !== 3) {
-            alert('Please upload exactly 3 photos (Left, Right, Front) of your child!');
-            return;
+        if (validateStep(currentStep)) {
+            submitFormData();
         }
-
-        // Validate video upload
-        if (!introVideo.files || introVideo.files.length === 0) {
-            alert('Please upload a 30-second introduction video!');
-            return;
-        }
-
-        // Check terms agreement
-        const termsAgree = document.getElementById('termsAgree');
-        const photoConsent = document.getElementById('photoConsent');
-        
-        if (!termsAgree.checked) {
-            alert('Please agree to the Terms & Conditions!');
-            return;
-        }
-
-        if (!photoConsent.checked) {
-            alert('Please provide consent for photography and videography!');
-            return;
-        }
-
-        // Validate age range
-        const age = parseInt(ageInput.value);
-        if (age < 3 || age > 16) {
-            alert('Age must be between 3 and 16 years!');
-            return;
-        }
-
-        // If all validations pass, submit to server
-        submitFormData();
     });
 
     // Function to submit form data to server
     async function submitFormData() {
         try {
             // Show loading state
-            const submitBtn = document.querySelector('.submit-btn');
             const originalBtnText = submitBtn.innerHTML;
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="btn-text">Submitting...</span> ⏳';
@@ -309,9 +443,8 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Failed to submit registration. Please try again.\n\nError: ' + error.message);
             
             // Reset button
-            const submitBtn = document.querySelector('.submit-btn');
             submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
+            submitBtn.innerHTML = '<span class="btn-text">Submit Registration</span><span class="btn-icon">🎉</span>';
         }
     }
 
@@ -342,6 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Hide form and show success message
         setTimeout(() => {
             form.style.display = 'none';
+            document.querySelector('.step-indicator').style.display = 'none';
             successMessage.classList.add('show');
             
             // Create confetti effect
@@ -413,9 +547,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
 
     formSections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(section);
     });
 
@@ -430,6 +561,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!this.value) {
                 this.parentElement.classList.remove('focused');
             }
+        });
+
+        // Clear error on input
+        input.addEventListener('input', function() {
+            this.style.borderColor = '';
+            hideError(this);
         });
     });
 
@@ -499,22 +636,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Add floating label effect
-    inputs.forEach(input => {
-        if (input.value) {
-            input.parentElement.classList.add('has-value');
-        }
-
-        input.addEventListener('input', function() {
-            if (this.value) {
-                this.parentElement.classList.add('has-value');
-            } else {
-                this.parentElement.classList.remove('has-value');
-            }
-        });
-    });
-
-
     // Social media input auto-formatting
     const instagramInput = document.getElementById('instagram');
 
@@ -573,9 +694,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Console log for form data (for debugging)
-    console.log('Kids Junior Fashion Week Registration Form Loaded');
-    console.log('Form validation and animations active');
-    console.log('Video background and social media features enabled');
-});
+    // Add shake animation for validation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    `;
+    document.head.appendChild(style);
 
+    // Console log for form data (for debugging)
+    console.log('Kids Junior Fashion Week Multi-Step Registration Form Loaded');
+    console.log(`Total Steps: ${totalSteps}`);
+    console.log('Form validation and animations active');
+});

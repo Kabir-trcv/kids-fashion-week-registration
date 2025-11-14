@@ -32,51 +32,75 @@
             <p class="subtitle">Registration Form 2025</p>
         </div>
 
+        <!-- Step Progress Indicator -->
+        <div class="step-indicator">
+            <div class="step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">City</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Child Info</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Parent Info</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Media</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="5">
+                <div class="step-circle">5</div>
+                <div class="step-label">Terms</div>
+            </div>
+        </div>
+
         <form id="registrationForm" class="registration-form">
-            <!-- City Selection Section -->
-            <div class="form-section city-section" id="citySection">
-                <h2 class="section-title">
-                    <span class="icon">🏙️</span>
-                    Welcome! Let's Start with Your City
-                </h2>
-                
-                <div class="form-group">
-                    <label for="city">Select Your City <span class="required">*</span></label>
-                    <select id="city" name="city" required>
-                        <option value="">Select Your City</option>
-                        <option value="Mumbai">Mumbai</option>
-                        <option value="Delhi">Delhi</option>
-                        <option value="Bangalore">Bangalore</option>
-                        <option value="Hyderabad">Hyderabad</option>
-                        <option value="Chennai">Chennai</option>
-                        <option value="Kolkata">Kolkata</option>
-                        <option value="Pune">Pune</option>
-                        <option value="Ahmedabad">Ahmedabad</option>
-                        <option value="Jaipur">Jaipur</option>
-                        <option value="Surat">Surat</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
+            <!-- STEP 1: City Selection -->
+            <div class="form-step active" data-step="1">
+                <div class="form-section city-section">
+                    <h2 class="section-title">
+                        <span class="icon">🏙️</span>
+                        Welcome! Let's Start with Your City
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label for="city">Select Your City <span class="required">*</span></label>
+                        <select id="city" name="city" required>
+                            <option value="">Select Your City</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Bangalore">Bangalore</option>
+                            <option value="Hyderabad">Hyderabad</option>
+                            <option value="Chennai">Chennai</option>
+                            <option value="Kolkata">Kolkata</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Ahmedabad">Ahmedabad</option>
+                            <option value="Jaipur">Jaipur</option>
+                            <option value="Surat">Surat</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
 
-                <div class="form-group" id="otherCityGroup" style="display: none;">
-                    <label for="otherCity">Specify Your City <span class="required">*</span></label>
-                    <input type="text" id="otherCity" name="otherCity" placeholder="Enter your city name">
+                    <div class="form-group" id="otherCityGroup" style="display: none;">
+                        <label for="otherCity">Specify Your City <span class="required">*</span></label>
+                        <input type="text" id="otherCity" name="otherCity" placeholder="Enter your city name">
+                    </div>
                 </div>
-
-                <button type="button" id="continueBtn" class="continue-btn" disabled>
-                    Continue to Registration Form →
-                </button>
             </div>
 
-            <!-- Main Form Content (Hidden Initially) -->
-            <div id="mainFormContent" style="display: none;">
-            
-            <!-- Child Information Section -->
-            <div class="form-section">
-                <h2 class="section-title">
-                    <span class="icon">👶</span>
-                    Child Information
-                </h2>
+            <!-- STEP 2: Child Information -->
+            <div class="form-step" data-step="2">
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="icon">👶</span>
+                        Child Information
+                    </h2>
                 
                 <div class="form-row">
                     <div class="form-group">
@@ -126,14 +150,16 @@
                         <input type="text" id="shoeSize" name="shoeSize" placeholder="e.g., 12, 2Y">
                     </div>
                 </div>
+                </div>
             </div>
 
-            <!-- Parent/Guardian Information -->
-            <div class="form-section">
-                <h2 class="section-title">
-                    <span class="icon">👨‍👩‍👧</span>
-                    Parent/Guardian Information
-                </h2>
+            <!-- STEP 3: Parent/Guardian Information -->
+            <div class="form-step" data-step="3">
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="icon">👨‍👩‍👧</span>
+                        Parent/Guardian Information
+                    </h2>
                 
                 <div class="form-row">
                     <div class="form-group">
@@ -177,14 +203,16 @@
                     <label for="emergencyContact">Emergency Contact Number <span class="required">*</span></label>
                     <input type="tel" id="emergencyContact" name="emergencyContact" placeholder="+1 (234) 567-8900" required>
                 </div>
+                </div>
             </div>
 
-            <!-- Photo Upload -->
-            <div class="form-section">
-                <h2 class="section-title">
-                    <span class="icon">📸</span>
-                    Photo Upload
-                </h2>
+            <!-- STEP 4: Photos and Videos -->
+            <div class="form-step" data-step="4">
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="icon">📸</span>
+                        Photo Upload
+                    </h2>
                 
                 <div class="form-group">
                     <label for="photos">Child's Photos (3 Required) <span class="required">*</span></label>
@@ -242,26 +270,28 @@
                 </div>
             </div>
 
-            <!-- Social Media Links -->
-            <div class="form-section">
-                <h2 class="section-title">
-                    <span class="icon">📱</span>
-                    Social Media
-                </h2>
-                
-                <div class="form-group">
-                    <label for="instagram">Instagram Handle</label>
-                    <div class="social-input-wrapper">
-                        <span class="social-icon">📷</span>
-                        <input type="text" id="instagram" name="instagram" placeholder="@username">
+                <!-- Social Media Links -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="icon">📱</span>
+                        Social Media
+                    </h2>
+                    
+                    <div class="form-group">
+                        <label for="instagram">Instagram Handle</label>
+                        <div class="social-input-wrapper">
+                            <span class="social-icon">📷</span>
+                            <input type="text" id="instagram" name="instagram" placeholder="@username">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Terms and Conditions -->
-            <div class="form-section">
-                <div class="terms-box">
-                    <h3>Terms & Conditions</h3>
+            <!-- STEP 5: Terms and Conditions -->
+            <div class="form-step" data-step="5">
+                <div class="form-section">
+                    <div class="terms-box">
+                        <h3>Terms & Conditions</h3>
                     <div class="terms-content">
                         <p>By submitting this registration form, I hereby:</p>
                         <ul>
@@ -285,15 +315,19 @@
                         <span class="checkbox-custom"></span>
                         I consent to photography and videography <span class="required">*</span>
                     </label>
+                    </div>
                 </div>
             </div>
 
-            </div>
-            <!-- End of mainFormContent -->
-
-            <!-- Submit Button -->
-            <div class="form-actions" id="submitSection" style="display: none;">
-                <button type="submit" class="submit-btn">
+            <!-- Step Navigation Buttons -->
+            <div class="step-navigation">
+                <button type="button" class="prev-btn" id="prevBtn" style="display: none;">
+                    ← Previous
+                </button>
+                <button type="button" class="next-btn" id="nextBtn">
+                    Next →
+                </button>
+                <button type="submit" class="submit-btn" id="submitBtn" style="display: none;">
                     <span class="btn-text">Submit Registration</span>
                     <span class="btn-icon">🎉</span>
                 </button>
